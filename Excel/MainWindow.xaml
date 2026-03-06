@@ -1,0 +1,145 @@
+﻿<Window x:Class="Excel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Excel Merge Tool"
+        Height="650"
+        Width="1100"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Összesítő -->
+            <RowDefinition Height="Auto"/>
+            <!-- Apollo -->
+            <RowDefinition Height="Auto"/>
+            <!-- Módosítandó -->
+            <RowDefinition Height="Auto"/>
+            <!-- Gombok -->
+            <RowDefinition Height="*"/>
+            <!-- DataGrid -->
+            <RowDefinition Height="Auto"/>
+            <!-- Progress -->
+            <RowDefinition Height="Auto"/>
+            <!-- Statisztika -->
+        </Grid.RowDefinitions>
+
+        <!-- Összesítő fájl -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Összesítő fájl:" Width="150" VerticalAlignment="Center"/>
+            <Button Content="Tallózás" Width="120" Click="BrowseOsszesito_Click"/>
+            <Button Content="Oszlop beállítás"
+            Width="150"
+            Margin="10,0,0,0"
+            Click="OpenColumnSettings_Click"/>
+        </StackPanel>
+
+        <!-- Apollo fájl -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Text="Apolló lekérdezés:" Width="150" VerticalAlignment="Center"/>
+            <Button Content="Tallózás" Width="120" Click="BrowseApollo_Click"/>
+        </StackPanel>
+
+        <!-- Módosítandó fájl -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,20">
+            <TextBlock Text="Módosítandó fájl:" Width="150" VerticalAlignment="Center"/>
+            <Button Content="Tallózás" Width="120" Click="BrowseModositando_Click"/>
+        </StackPanel>
+
+        <!-- Gombok -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <Button Content="Elemzés"
+                    Height="40"
+                    Width="200"
+                    Background="#2E8B57"
+                    Foreground="White"
+                    Click="Analyze_Click"/>
+
+            <Button Content="Módosítás mentése"
+                    Height="40"
+                    Width="200"
+                    Margin="20,0,0,0"
+                    Background="#1E90FF"
+                    Foreground="White"
+                    Click="SaveChanges_Click"/>
+
+            <StackPanel Orientation="Vertical" Margin="0,20,0,0">
+
+                <TextBlock Text="Mentett fájl neve (kiterjesztés nélkül):"/>
+                <TextBox x:Name="OutputFileNameBox"
+             Margin="0,5,0,10"/>
+
+                <TextBlock Text="Kimeneti oszlop kezdete (pl. L):"/>
+                <TextBox x:Name="OutputStartColumnBox"
+             Width="60"
+             Margin="0,5,0,10"/>
+
+            </StackPanel>
+
+        </StackPanel>
+        
+        
+
+        <!-- Preview -->
+        <DataGrid x:Name="PreviewGrid"
+          Grid.Row="4"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          AlternatingRowBackground="#F5F5F5"
+          Margin="0,20,0,0">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+
+                        <!-- CE single -->
+                        <DataTrigger Binding="{Binding MatchType}" Value="CE_single">
+                            <Setter Property="Background" Value="#DFF6DD"/>
+                        </DataTrigger>
+
+                        <!-- Apollo match -->
+                        <DataTrigger Binding="{Binding MatchType}" Value="Apollo_match">
+                            <Setter Property="Background" Value="#DDEEFF"/>
+                        </DataTrigger>
+
+                        <!-- Manual review -->
+                        <DataTrigger Binding="{Binding MatchType}" Value="Manual_review">
+                            <Setter Property="Background" Value="#FFE0E0"/>
+                        </DataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Lakásszám" Binding="{Binding Apartment}" Width="120"/>
+                <DataGridTextColumn Header="Név" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="Módosítás" Binding="{Binding ModositasNev}" Width="200"/>
+                <DataGridTextColumn Header="Blokk" Binding="{Binding BlockName}" Width="120"/>
+                <DataGridTextColumn Header="Bruttó" Binding="{Binding Brutto}" Width="120"/>
+                <DataGridTextColumn Header="Nettó" Binding="{Binding Netto}" Width="120"/>
+                <DataGridTextColumn Header="ÁFA" Binding="{Binding Afa}" Width="100"/>
+                <DataGridTextColumn Header="Match típus" Binding="{Binding MatchType}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Progress Bar -->
+        <ProgressBar Grid.Row="5"
+                     x:Name="MainProgressBar"
+                     Height="20"
+                     Minimum="0"
+                     Maximum="100"
+                     Margin="0,15,0,5"
+                     Visibility="Collapsed"/>
+
+        <!-- Statisztika -->
+        <TextBlock Grid.Row="6"
+                   x:Name="StatsText"
+                   FontWeight="Bold"
+                   Margin="0,5,0,0"/>
+        <Button Content="Apollo oszlopok"
+        Margin="280,0,630,10"
+        Width="150"
+        Click="OpenApolloColumnSettings_Click" Grid.Row="1"/>
+    </Grid>
+</Window>
