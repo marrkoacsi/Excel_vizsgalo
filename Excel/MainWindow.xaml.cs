@@ -1,6 +1,10 @@
 ﻿using Excel.Helpers;
 using Excel.Models;
+using Excel.Logic;
+
 using Microsoft.Win32;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -17,7 +21,6 @@ namespace Excel
         private string apartmentColumn;
         private List<string> optionColumns = new List<string>();
 
-        private string apolloNameColumn;
         private string apolloBruttoColumn;
         private string apolloNettoColumn;
         private string apolloAfaColumn;
@@ -41,9 +44,11 @@ namespace Excel
 
         private void BrowseApollo_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Excel Files|*.xlsx";
-            dlg.Multiselect = true;
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xlsx",
+                Multiselect = true
+            };
 
             if (dlg.ShowDialog() == true)
                 apolloPaths = dlg.FileNames.ToList();
@@ -62,11 +67,12 @@ namespace Excel
                 return;
             }
 
-            // ✅ JAVÍTVA – filePath átadva
             var columns = ExcelHelper.ReadHeaderColumns(osszesitoPath);
 
-            var window = new ColumnSettingsWindow(columns);
-            window.Owner = this;
+            var window = new ColumnSettingsWindow(columns)
+            {
+                Owner = this
+            };
 
             if (window.ShowDialog() == true)
             {
@@ -154,8 +160,10 @@ namespace Excel
 
         private string SelectFile()
         {
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Excel Files|*.xlsx";
+            OpenFileDialog dlg = new OpenFileDialog
+            {
+                Filter = "Excel Files|*.xlsx"
+            };
             return dlg.ShowDialog() == true ? dlg.FileName : null;
         }
 
@@ -169,8 +177,10 @@ namespace Excel
 
             var columns = ExcelHelper.ReadHeaderColumns(apolloPaths[0]);
 
-            var window = new ApolloColumnSettingsWindow(columns);
-            window.Owner = this;
+            var window = new ApolloColumnSettingsWindow(columns)
+            {
+                Owner = this
+            };
 
             if (window.ShowDialog() == true)
             {
@@ -178,6 +188,70 @@ namespace Excel
                 apolloBruttoColumn = window.SelectedBruttoColumn;
                 apolloNettoColumn = window.SelectedNettoColumn;
                 apolloAfaColumn = window.SelectedAfaColumn;
+            }
+        }
+
+
+        // ---------------------------------------------------
+        // AI APOLLO FEATURE
+        // ---------------------------------------------------
+
+        private async void RunApolloAI_Click(object sender, RoutedEventArgs e)
+        {
+
+            try
+            {
+                if (apolloPaths == null || apolloPaths.Count == 0)
+                {
+                    MessageBox.Show("Előbb válaszd ki az Apollo Excel fájlt.");
+                    return;
+                }
+
+                string apiKey = "AIzaSyDS9ODMCVklPSrkP6wR-Z_R75ofIvBqrIE";
+
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    MessageBox.Show("Hiányzik az OpenAI API kulcs az App.config fájlban.");
+                    return;
+                }
+
+
+                var processor = new ApolloInvoiceProcessor();
+
+                var result = new List<(ApolloInvoice invoice, RealEstateInfo info)>();
+
+                foreach (var path in apolloPaths)
+                {
+                    var partial = await processor.Process(path);
+                    result.AddRange(partial);
+                }
+
+                // duplikátum szűrés
+                result = result
+                    .GroupBy(x => new
+                    {
+                        x.invoice.Name,
+                        x.invoice.InvoiceNumber,
+                        x.info.Unit,
+                        x.invoice.Brutto
+                    })
+                    .Select(g => g.First())
+                    .ToList();
+
+                var writer = new ApolloResultWriter();
+
+                string output = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    "apollo_ai_result.xlsx"
+                );
+
+                writer.Write(output, result);
+
+                MessageBox.Show("Apollo feldolgozás kész:\n" + output);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

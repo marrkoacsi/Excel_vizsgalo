@@ -23,7 +23,6 @@ namespace Excel.Helpers
                     .Distinct()
                     .ToList();
 
-                // ===== 1️⃣ FEJLÉC =====
                 int headerCol = startColIndex;
 
                 foreach (var mod in modNames)
@@ -39,7 +38,6 @@ namespace Excel.Helpers
                     headerCol += 4;
                 }
 
-                // ===== 2️⃣ Lakásszám mapping (A oszlop) =====
                 var rowMap = new Dictionary<string, IXLRow>();
 
                 foreach (var row in ws.RowsUsed().Skip(1))
@@ -53,7 +51,6 @@ namespace Excel.Helpers
 
                 int maxWrittenRow = 0;
 
-                // ===== 3️⃣ ADAT KIÍRÁS =====
                 foreach (var change in changes)
                 {
                     if (string.IsNullOrEmpty(change.Apartment))
@@ -75,18 +72,16 @@ namespace Excel.Helpers
                     decimal netto = change.Netto;
                     decimal afa = change.Afa;
 
-                    // 🔥 Ha csak bruttó van → számolunk 5%-kal
                     if (brutto > 0 && netto == 0)
                     {
                         netto = System.Math.Round(brutto / 1.05m, 2);
-                        afa = 5;
+                        afa = brutto - netto;
                     }
 
                     nettoCell.Value = netto;
                     bruttoCell.Value = brutto;
                     afaCell.Value = afa;
 
-                    // 🔴 csak ha tényleg nincs adat
                     if (brutto == 0)
                         bruttoCell.Style.Fill.BackgroundColor = XLColor.LightPink;
 
@@ -100,7 +95,6 @@ namespace Excel.Helpers
                         maxWrittenRow = targetRow.RowNumber();
                 }
 
-                // ===== 4️⃣ ÖSSZESEN SOR =====
                 if (maxWrittenRow > 1)
                 {
                     int summaryRow = maxWrittenRow + 1;

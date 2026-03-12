@@ -99,7 +99,7 @@ namespace Excel.Helpers
                     if (apartments.Count == 1)
                     {
                         decimal netto = Math.Round(brutto / 1.05m, 2);
-                        decimal afa = brutto - netto;
+                        decimal afa = 5;
 
                         result.Add(new ModificationPreview
                         {
@@ -108,20 +108,15 @@ namespace Excel.Helpers
                             BlockName = blockName,
                             Brutto = brutto,
                             Netto = netto,
-                            Afa = 5,
+                            Afa = afa,
                             MatchType = "CE_single"
                         });
                     }
                     else
                     {
-                        if (apolloIndex != null && apolloIndex.ContainsKey(brutto))
+                        if (apolloIndex.ContainsKey(brutto))
                         {
-                            var apolloEntry = apolloIndex[brutto]
-                                .GroupBy(x => new { x.Brutto, x.Netto, x.Afa })
-                                .Select(g => g.First())
-                                .FirstOrDefault();
-
-                            if (apolloEntry != null)
+                            foreach (var apolloEntry in apolloIndex[brutto])
                             {
                                 result.Add(new ModificationPreview
                                 {
@@ -135,7 +130,6 @@ namespace Excel.Helpers
                                 });
                             }
                         }
-
                         else
                         {
                             result.Add(new ModificationPreview
