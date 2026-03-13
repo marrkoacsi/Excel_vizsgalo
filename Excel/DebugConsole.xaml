@@ -1,0 +1,19 @@
+﻿<Window x:Class="Excel.DebugConsole"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Debug Console"
+        Height="400"
+        Width="700"
+        Background="#1E1E1E">
+
+    <Grid>
+        <TextBox Name="ConsoleText"
+                 FontFamily="Consolas"
+                 FontSize="14"
+                 Foreground="Lime"
+                 Background="#1E1E1E"
+                 IsReadOnly="True"
+                 VerticalScrollBarVisibility="Auto"
+                 TextWrapping="Wrap"/>
+    </Grid>
+</Window>

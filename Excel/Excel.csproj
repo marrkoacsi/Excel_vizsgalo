@@ -119,6 +119,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DebugConsole.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -130,14 +134,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DebugConsole.xaml.cs">
+      <DependentUpon>DebugConsole.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugLogger.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="ColumnSettingsWindow.xaml.cs">
       <DependentUpon>ColumnSettingsWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ExcelProcessor.cs" />
     <Compile Include="Helpers\ExcelWriter.cs" />
+    <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Logic\ApolloInvoiceProcessor.cs" />
     <Compile Include="Logic\ApolloResultWriter.cs" />
+    <Compile Include="Logic\InstallmentExcelWriter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -145,7 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ApolloInvoice.cs" />
+    <Compile Include="Models\InstallmentPreviewRow.cs" />
     <Compile Include="Models\ModificationPreview.cs" />
+    <Compile Include="Models\PreviewRow.cs" />
     <Compile Include="Models\RealEstateInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

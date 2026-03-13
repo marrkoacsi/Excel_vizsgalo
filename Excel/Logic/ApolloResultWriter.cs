@@ -19,18 +19,18 @@ public class ApolloResultWriter
 
         int r = 2;
 
-        foreach (var item in data)
+        foreach (var (invoice, info) in data)
         {
-            ws.Cell(r, 1).Value = item.invoice.Name;
-            ws.Cell(r, 2).Value = item.invoice.InvoiceNumber;
-            ws.Cell(r, 3).Value = item.info.Unit;
-            ws.Cell(r, 4).Value = item.info.Type;
-            ws.Cell(r, 6).Value = item.invoice.Brutto;
+            ws.Cell(r, 1).Value = invoice.Name;
+            ws.Cell(r, 2).Value = invoice.InvoiceNumber;
+            ws.Cell(r, 3).Value = info.Unit;
+            ws.Cell(r, 4).Value = info.Type;
+            ws.Cell(r, 6).Value = invoice.Brutto;
             ws.Cell(r, 6).Style.NumberFormat.Format = "#,##0";
 
-            ws.Cell(r, 5).Value = item.invoice.Netto;
+            ws.Cell(r, 5).Value = invoice.Netto;
             ws.Cell(r, 5).Style.NumberFormat.Format = "#,##0";
-            ws.Cell(r, 7).Value = item.info.Vat;
+            ws.Cell(r, 7).Value = info.Vat;
 
             r++;
         }

@@ -4,6 +4,28 @@
              xmlns:local="clr-namespace:Excel"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+
+        <SolidColorBrush x:Key="PrimaryColor" Color="#1e272e"/>
+        <SolidColorBrush x:Key="AccentColor" Color="#00a8ff"/>
+        <SolidColorBrush x:Key="TextColor" Color="White"/>
+
+        <Style TargetType="Window">
+            <Setter Property="Background" Value="{StaticResource PrimaryColor}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextColor}"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource AccentColor}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="6"/>
+        </Style>
+
     </Application.Resources>
 </Application>
